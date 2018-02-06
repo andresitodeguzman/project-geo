@@ -1,5 +1,5 @@
 if("geolocation" in navigator){
-  navigator.geolocation.getCurrentLocation(postion=>{
+  navigator.geolocation.getCurrentPosition(postion=>{
     $("#position").html(`Position ${position}`);
   });
 } else {
