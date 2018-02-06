@@ -12,12 +12,37 @@
   </body>
 </html>
 <script>
-$.ajax({
-type:'GET',
-url:'https://maps.googleapis.com/maps/api/geocode/json?address=1600+Amphitheatre+Parkway,+Mountain+View,+CA&key=AIzaSyBDOL-nNs8SKrlnkr97ByrLwJZ6PHLXeas',
-data: {},
-success: (result)=>{console.log(result);}
-}).fail(()=>{
-console.error('app error');
-});
+ if("geolocation" in navigator){
+  navigator.geolocation.getCurrentPosition(pos=>{
+    var coo = pos.coords;
+    $("#position").html(`
+      Position<br><br>
+      Latitude: ${coo.latitude}<br>
+      Longitude: ${coo.longitude}<br>
+      Accuracy: ${coo.accuracy}<br><br>
+      <a href="http://www.openstreetmap.org/?lat=${coo.latitude}&lon=${coo.longitude}&zoom=17&layers=M">Open Map</a>
+     `);
+    
+    var lt = coo.latitude;
+    var lo = coo.longitude;
+    var ltlo = `${lt}, ${lo}`;
+    
+    $.ajax({
+      type:'GET',
+      url:'https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyBDOL-nNs8SKrlnkr97ByrLwJZ6PHLXeas',
+      data: {
+      latlng: ltlo
+      },
+      success: (result)=>{console.log(result);}
+      }).fail(()=>{
+      console.error('app error');
+      });
+  }, err=>{
+    alert(err);
+  });
+} else {
+  console.error("Geolocation is not available on this device.");
+}
+  
+
 </script>
