@@ -3,7 +3,7 @@
   <head>
     <title>Project Geo</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="index.js"></script>
+    <!--script src="index.js"></script-->
   </head>
   <body>
     <h1>GeoLocation</h1>
@@ -11,3 +11,13 @@
     </p>
   </body>
 </html>
+<script>
+$.ajax({
+type:'GET',
+url:'https://maps.googleapis.com/maps/api/geocode/json?address=1600+Amphitheatre+Parkway,+Mountain+View,+CA&key=AIzaSyAYroruKZVazhbGP5_uENqqQ2tdPWFyRWs',
+data: {},
+success: (result)=>{console.log(result);}
+}).fail(()=>{
+console.error('app error');
+});
+</script>
