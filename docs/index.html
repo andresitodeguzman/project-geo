@@ -9,6 +9,7 @@
     <h1>GeoLocation</h1>
     <p id="position">
     </p>
+    <p id="address"></p>
   </body>
 </html>
 <script>
@@ -33,7 +34,11 @@
       data: {
       latlng: ltlo
       },
-      success: (result)=>{console.log(result);}
+      success: (result)=>{
+        console.log(result);
+        var ad = result[0]['formatted_address'];
+        $("#address").html(ad);
+      }
       }).fail(()=>{
       console.error('app error');
       });
