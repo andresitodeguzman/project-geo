@@ -36,7 +36,7 @@
       },
       success: (result)=>{
         console.log(result);
-        var ad = result[0]['formatted_address'];
+        var ad = result['results'][0]['address_components']['formatted_address'];
         $("#address").html(ad);
       }
       }).fail(()=>{
