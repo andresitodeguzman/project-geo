@@ -212,7 +212,8 @@ var ride = (from,to)=>{
 			var nearest = station.nearest(pos.coords.latitude,pos.coords.longitude);
 			var stations = station.list();
 
-			if(from == to){
+			if(from === to){
+				alert("You are now at your destination");
 				showActivity('atDestination');
 			}
 
