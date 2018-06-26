@@ -214,6 +214,7 @@ var ride = (from,to)=>{
 			console.log(to);
 
 			if(nearest.id == to){
+				navigator.geolocation.clearWatch(id);
 				alert("You are now at your destination");
 				showActivity('atDestination');
 			}
