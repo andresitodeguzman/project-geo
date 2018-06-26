@@ -208,6 +208,7 @@ var ride = (from,to)=>{
 	showActivity('riding');
 
 	if('geolocation' in navigator){
+		var id;
 		var showPosition = (pos)=>{
 			var nearest = station.nearest(pos.coords.latitude,pos.coords.longitude);
 			var stations = station.list();
@@ -247,7 +248,7 @@ var ride = (from,to)=>{
 		    maximumAge:0
 		};
 
-		navigator.geolocation.watchPosition(showPosition,errorPosition,options);
+		id = navigator.geolocation.watchPosition(showPosition,errorPosition,options);
 	}
 
 };
