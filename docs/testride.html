@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Sample Ride</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/css/materialize.min.css">
+
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/js/materialize.min.js"></script>
+
+</head>
+<body>
+	<div class="activity" id="loadingLocationActivity">
+		<div class="container">
+			<br><br>
+			<center>
+				<h4>Please Wait!</h4>
+			</center>
+		</div>
+	</div>
+	<div class="activity" id="welcomeActivity">
+		<div class="container">
+			<h4 class="yellow-text text-darken-4">Welcome to <span class="from">Placeholder</span> Station!</h4><br>
+			<br>
+			<h5>Choose the station where you want to go</h5>
+			<ul class="collection" id="chooseStation"></ul>
+		</div>
+	</div>
+	<div class="activity" id="ridingActivity">
+		<div class="container">
+			<ul class="collection">
+				<li class="collection-item">
+					From: <span class="from">From</span> Station<br>
+					To: <span class="to">To</span> Station
+				</li>
+			</ul>
+		</div>
+	</div>
+</body>
+</html>
+<script type="text/javascript">
+
+class Stations {
+	init(){
+		var stationList = [
+			{"id":1,"station_name":"Roosevelt",line:1,latitude:14.6576072,longitude:121.0187903},
+			{"id":2,"station_name":"Munoz",line:1,latitude:14.6575508,longitude:121.0190023},
+			{"id":3,"station_name":"Monumento",line:1,latitude:14.6543722,longitude:120.9817053},
+			{"id":4,"station_name":"5th Avenue",line:1,latitude:14.6444202,longitude:120.9813945},
+			{"id":5,"station_name":"R. Papa",line:1,latitude:14.636055,longitude:120.9801084},
+			{"id":6,"station_name":"Abad Santos",line:1,latitude:14.63088263,longitude:120.9790571},
+			{"id":7,"station_name":"Blumentritt",line:1,latitude:14.6226405,longitude:120.9807027},
+			{"id":8,"station_name":"Tayuman",line:1,latitude:14.6167419,longitude:120.980544},
+			{"id":9,"station_name":"Bambang",line:1,latitude:14.6082169,longitude:120.9778718},
+			{"id":10,"station_name":"Doroteo Jose",line:1,latitude:14.6054454,longitude:120.9798723},
+			{"id":11,"station_name":"Carriedo",line:1,latitude:14.5997464,longitude:120.9792228},
+			{"id":12,"station_name":"Central Terminal",line:1,latitude:14.5927811,longitude:120.9794726},
+			{"id":13,"station_name":"United Nations",line:1,latitude:14.5825552,longitude:120.9824323},
+			{"id":14,"station_name":"Pedro Gil",line:1,latitude:14.5770233,longitude:120.9872367},
+			{"id":15,"station_name":"Quirino",line:1,latitude:14.5702241,longitude:120.9894316},
+			{"id":16,"station_name":"Vito Cruz",line:1,latitude:14.5633042,longitude:120.9926264},
+			{"id":17,"station_name":"Gil Puyat",line:1,latitude:14.5541678,longitude:120.9949784},
+			{"id":18,"station_name":"Libertad",line:1,latitude:14.5476681,longitude:120.9964217},
+			{"id":19,"station_name":"EDSA",line:1,latitude:14.538408,longitude:121.0003645},
+			{"id":20,"station_name":"Baclaran",line:1,latitude:14.5342911,longitude:120.9961528},
+			
+			{"id":21,"station_name":"CM Recto",line:2,latitude:14.6035149,longitude:120.9814139},
+			{"id":22,"station_name":"Legarda",line:2,latitude:14.6008657,longitude:120.9903143},
+			{"id":23,"station_name":"Pureza",line:2,latitude:14.6014271,longitude:121.0030261},
+			{"id":24,"station_name":"V. Mapa",line:2,latitude:14.604117,longitude:121.0149374},
+			{"id":25,"station_name":"J. Ruiz",line:2,latitude:14.6105588,longitude:121.0240197},
+			{"id":26,"station_name":"Gilmore",line:2,latitude:14.6134978,longitude:121.0320828},
+			{"id":27,"station_name":"Betty Go",line:2,latitude:14.6185675,longitude:121.040579},
+			{"id":28,"station_name":"Cubao",line:2,latitude:14.6210362,longitude:121.049687},
+			{"id":29,"station_name":"Anonas",line:2,latitude:14.6279892,longitude:121.0625885},
+			{"id":30,"station_name":"Katipunan",line:2,latitude:14.6307775,longitude:121.0705122},
+			{"id":31,"station_name":"Santolan",line:2,latitude:14.6221002,longitude:121.0837918}
+		];
+
+		localStorage.setItem("lrta_stations",JSON.stringify(stationList));
+
+		return stationList;
+	}
+
+	list(){
+		return JSON.parse(localStorage.getItem("lrta_stations"));
+	}
+
+	find(cat,q){
+		var st = this.list();
+		var res = st.find((obj)=>{return obj[cat]==q});
+		return res;
+	}
+
+	filter(cat,q){
+		var st = this.list();
+		var res = st.filter((obj)=>{return obj[cat] == q});
+	}
+
+	filterExcept(cat,q){
+		var st = this.list();
+		var res = st.filter((obj)=>{return obj[cat] !== q});
+		return res;
+	}
+
+	removeOrigin(cat,q){
+		return res;
+	}
+
+	nearest(lat,lng){
+		// Convert Degress to Radians
+		function Deg2Rad(deg) {
+		  return deg * Math.PI / 180;
+		}
+
+		function PythagorasEquirectangular(lat1, lon1, lat2, lon2) {
+		  lat1 = Deg2Rad(lat1);
+		  lat2 = Deg2Rad(lat2);
+		  lon1 = Deg2Rad(lon1);
+		  lon2 = Deg2Rad(lon2);
+		  var R = 6371; // Earth's radius in km
+		  var x = (lon2 - lon1) * Math.cos((lat1 + lat2) / 2);
+		  var y = (lat2 - lat1);
+		  var d = Math.sqrt(x * x + y * y) * R;
+		  return d;
+		}
+
+		var lrtList = this.list();
+		var mindif = 99999;
+		var closest;
+
+		for (var index = 0; index < lrtList.length; ++index) {
+			var dif = PythagorasEquirectangular(lat, lng, lrtList[index].latitude, lrtList[index].longitude);
+			if (dif < mindif) {
+			  closest = index;
+			  mindif = dif;
+			}
+		}	
+		return lrtList[closest]
+	}
+
+
+}
+
+
+let station = new Stations();
+
+var clear = ()=>{
+	$(".activity").hide();
+}
+
+var showActivity = (name)=>{
+	clear();
+	$(`#${name}Activity`).fadeIn();
+}
+
+var prepareRide = ()=>{
+	if('geolocation' in navigator){
+		var showPosition = (pos)=>{
+			var lat = pos.coords.latitude;
+			var lon = pos.coords.longitude;
+			var nearest = station.nearest(lat,lon);
+			var stationList = station.filterExcept('id',nearest.id);
+			console.log(nearest);
+			console.log(stationList);
+			$(".from").html(nearest.station_name);
+			$("#chooseStation").html("");
+			$.each(stationList,(index,st)=>{
+				var ccolor = "yellow darken-3";
+				if(st.line == 1) ccolor = "yellow darken-3";
+				if(st.line == 2) ccolor = "deep-purple darken-3";
+				var tpl = `
+					<li class="collection-item">
+					<a href="#!" onclick="ride('${nearest.id}','${st.id}')">
+						<p>
+							<b class="black-text">${st.station_name} Station</b><br>
+							<div class="chip white-text ${ccolor}">Line ${st.line}</div>
+						</p>
+					</a>
+					</li>
+				`;
+				$("#chooseStation").append(tpl);
+			});
+			showActivity('welcome');
+
+		}
+		var errorPosition = ()=>{
+			M.toast({html:"Cannot get current position", durationLength:3000});
+		}
+		var options = {
+			enableHighAccuracy:true,
+		    maximumAge:0
+		};
+		navigator.geolocation.getCurrentPosition(showPosition,errorPosition,options);
+
+	}
+};
+
+var ride = (from,to)=>{
+	var st = station.find("id",to);
+	$(".to").html(st.station_name);
+	showActivity('riding');
+};
+
+$(document).ready(()=>{
+	station.init();
+	showActivity('loadingLocataion');
+	prepareRide();
+});
+</script>
