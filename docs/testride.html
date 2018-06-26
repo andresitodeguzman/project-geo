@@ -40,7 +40,7 @@
 			<div id="stationWhereAbout"></div>
 		</div>
 	</div>
-	<div class="activity" id="atDestination">
+	<div class="activity" id="atDestinationActivity">
 		<div class="container">
 			<h4 class="blue-text text-darken-3">You are now at your destination!</h4>
 		</div>
@@ -211,8 +211,9 @@ var ride = (from,to)=>{
 		var showPosition = (pos)=>{
 			var nearest = station.nearest(pos.coords.latitude,pos.coords.longitude);
 			var stations = station.list();
+			console.log(to);
 
-			if(nearest.id === to){
+			if(nearest.id == to){
 				alert("You are now at your destination");
 				showActivity('atDestination');
 			}
