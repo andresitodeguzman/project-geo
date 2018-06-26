@@ -40,6 +40,11 @@
 			<div id="stationWhereAbout"></div>
 		</div>
 	</div>
+	<div class="activity" id="atDestination">
+		<div class="container">
+			<h4 class="blue-text text-darken-3">You are now at your destination!</h4>
+		</div>
+	</div>
 </body>
 </html>
 <script type="text/javascript">
@@ -206,7 +211,13 @@ var ride = (from,to)=>{
 		var showPosition = (pos)=>{
 			var nearest = station.nearest(pos.coords.latitude,pos.coords.longitude);
 			var stations = station.list();
+
+			if(from == to){
+				showActivity('atDestination');
+			}
+
 			$("#stationWhereAbout").html("");
+
 			$.each(stations,(index,st)=>{
 				var ccolor = "";
 				if(st.id == to) ccolor = "blue darken-3 white-text";
