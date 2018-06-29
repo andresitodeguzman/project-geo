@@ -1,0 +1,69 @@
+<!Doctype html>
+<html>
+  <head>
+    <title>Project Geo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <!--script src="index.js"></script-->
+  </head>
+  <body>
+    <div class="container">
+          <div class="card">
+      <header class="card-header">
+        <p class="card-header-title">Geolocation</p>
+      </header>
+      <div class="card-content">
+        <div class="content">
+          <p id="position">
+            Loading Position
+          </p>
+            <p id="address">
+          Loading Address
+           </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
+<script>
+ if("geolocation" in navigator){
+  navigator.geolocation.getCurrentPosition(pos=>{
+    var coo = pos.coords;
+    $("#position").html(`
+      Position<br><br>
+      Latitude: ${coo.latitude}<br>
+      Longitude: ${coo.longitude}<br>
+      Accuracy: ${coo.accuracy}<br><br>
+      <a href="http://www.openstreetmap.org/?lat=${coo.latitude}&lon=${coo.longitude}&zoom=17&layers=M">Open Map</a>
+     `);
+    
+    var lt = coo.latitude;
+    var lo = coo.longitude;
+    var ltlo = `${lt}, ${lo}`;
+    
+    $.ajax({
+      type:'GET',
+      url:'https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyBDOL-nNs8SKrlnkr97ByrLwJZ6PHLXeas',
+      data: {
+      latlng: ltlo
+      },
+      success: (result)=>{
+        console.log(result);
+        var ad = result['results'][0]['formatted_address'];
+        $("#address").html(ad);
+      }
+      }).fail(()=>{
+      console.error('app error');
+      });
+  }, err=>{
+    alert(err);
+  });
+} else {
+  console.error("Geolocation is not available on this device.");
+}
+  
+
+</script>
+<script defer src="https://use.fontawesome.com/releases/v5.0.0/js/all.js"></script>

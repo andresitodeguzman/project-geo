@@ -1,69 +1,534 @@
-<!Doctype html>
-<html>
-  <head>
-    <title>Project Geo</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <!--script src="index.js"></script-->
-  </head>
-  <body>
-    <div class="container">
-          <div class="card">
-      <header class="card-header">
-        <p class="card-header-title">Geolocation</p>
-      </header>
-      <div class="card-content">
-        <div class="content">
-          <p id="position">
-            Loading Position
-          </p>
-            <p id="address">
-          Loading Address
-           </p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </body>
-</html>
-<script>
- if("geolocation" in navigator){
-  navigator.geolocation.getCurrentPosition(pos=>{
-    var coo = pos.coords;
-    $("#position").html(`
-      Position<br><br>
-      Latitude: ${coo.latitude}<br>
-      Longitude: ${coo.longitude}<br>
-      Accuracy: ${coo.accuracy}<br><br>
-      <a href="http://www.openstreetmap.org/?lat=${coo.latitude}&lon=${coo.longitude}&zoom=17&layers=M">Open Map</a>
-     `);
-    
-    var lt = coo.latitude;
-    var lo = coo.longitude;
-    var ltlo = `${lt}, ${lo}`;
-    
-    $.ajax({
-      type:'GET',
-      url:'https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyBDOL-nNs8SKrlnkr97ByrLwJZ6PHLXeas',
-      data: {
-      latlng: ltlo
-      },
-      success: (result)=>{
-        console.log(result);
-        var ad = result['results'][0]['formatted_address'];
-        $("#address").html(ad);
-      }
-      }).fail(()=>{
-      console.error('app error');
-      });
-  }, err=>{
-    alert(err);
-  });
-} else {
-  console.error("Geolocation is not available on this device.");
-}
-  
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Default Setting -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
-</script>
-<script defer src="https://use.fontawesome.com/releases/v5.0.0/js/all.js"></script>
+    <!-- Theme Color -->
+    <meta name="theme-color" content="#FFc000">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/style.css">
+
+    <!-- Fonts -->
+    <link rel="stylesheet" href="fonts/linear-icons.css">
+    <link rel="stylesheet" href="fonts/hk-grotesk.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <!-- Title-->
+    <title>LRT-1</title>
+
+    <!-- Manifest -->
+    <!-- <link rel="manifest" href="/manifest.json"> -->
+
+    
+</head>
+
+<body>
+    <!-- Checkbox controllers -->
+    <input type="checkbox" id="bottom-menu-collapse">
+    <input type="checkbox" id="action-collapse">
+    <input type="checkbox" id="community-reveal">
+    <input type="checkbox" id="ride-reveal">
+
+    <div class="home">
+
+    <!-- Header Accent -->
+    <div class="header-accent"></div>
+
+    <!-- Bottom Action Bar -->
+    <div class="bottom-action-bar">
+        <!-- Left Menu -->
+        <span class="left-menu">
+            <label for="bottom-menu-collapse">
+                <span class="lnr lnr-menu"></span>
+            </label>
+        </span>
+
+        <!-- Call to Action -->
+        <span class="action">
+            <label for="action-collapse">
+                <span class="button">
+                    <span class="lnr lnr-train"></span>
+                    <span>Ride a Train</span>
+                </span>
+            </label>
+        </span>
+
+        <!-- Right Menu -->
+        <span class="right-menu">
+            <label for="community-reveal">
+                <span class="lnr lnr-users"></span>
+            </label>
+        </span>
+    </div>
+
+    <!-- Assistant Dimmer -->
+    <div class="search-dim"></div>
+
+    <!-- Assistant -->
+    <div class="assistant">
+        <span class="lnr lnr-magnifier"></span>
+        <input type="text" placeholder="Look for directions, places.." onfocus="searchFocus()" onblur="searchBlur()">
+    </div>
+
+    <!-- Card Container -->
+    <div class="card-container">
+        
+    <!-- Weather Card -->
+    <div class="card">
+            <h4>Taft Avenue</h4>
+            <div class="weather-main">
+                <span class="detail-main">
+                    <span class="lnr lnr-sun"></span>
+                    <span class="text-detail">SUNNY</span>
+                </span>
+                <span class="temperature">
+                    45°
+                </span>
+                
+            </div>
+
+            <div class="weather-sub">
+                <span class="sub-item">
+                    <span class="day">TUE 45°</span>
+                    <span class="lnr lnr-sun"></span>
+                </span>
+                <span class="sub-item">
+                        <span class="day">WED 45°</span>
+                        <span class="lnr lnr-sun"></span>
+                </span>
+                <span class="sub-item">
+                        <span class="day">THUR 45°</span>
+                        <span class="lnr lnr-sun"></span>
+                    </span>
+                <span class="sub-item">
+                        <span class="day">FRI 45°</span>
+                        <span class="lnr lnr-sun"></span>
+                </span>
+            </div>
+    
+    
+        </div>
+        <div class="card">
+            <h4>EDSA Station Information<br><br><br><br><br><br><br></h4>
+        </div>
+        <div class="card">
+            <h4>Special Deals<br><br><br><br><br><br><br></h4>
+        </div>
+        
+    </div>
+
+    <!-- Floating Drawers -->
+    <!-- Bottom Menu dim -->
+    <label for="bottom-menu-collapse">
+        <div class="bottom-dim"></div>
+    </label>
+
+    
+    <label for="action-collapse">
+        <div class="action-dim"></div>
+    </label>
+
+    <div class="generic-dim"></div>
+    
+
+    <!-- Bottom Menu Drawer -->
+    <div class="bottom-drawer">
+        <div class="profile">
+            <img src="custom/img.jpg">
+            <span>
+                <div class="name">John Smith</div>
+                <span class="email">johnsmith@email.com</span>
+            </span>
+            <span class="settings">
+                <span class="lnr lnr-cog"></span>
+            </span>
+        </div>
+
+        <span class="menu-item">Manage Cards</span>
+        <span class="menu-item">LRT-1 Stations</span>
+        <span class="menu-item">Help</span>
+        <span class="menu-item">About</span>
+        
+    </div>
+
+    <!-- Action Pane -->
+    <div class="action-pane">
+        <!-- Travel selectors (left) -->
+        <span class="travel-selection">
+            <span>
+                <span class="lnr lnr-chevron-down"></span>
+                <select id="fromSelect">
+                </select>
+                <label>From Station</label>
+            </span>
+            <br>
+            <hr style="width: 100%" color="#eeeeee" size=1>
+            <span>
+                <span class="lnr lnr-chevron-down"></span>
+                <select id="toSelect">
+                </select>
+                <label>To Station</label>
+            </span>
+        </span>
+        <!-- Travel button (right) -->
+        
+            <label for="action-collapse" class="travelbtn-container"  onclick="ride()">
+            
+                <span class="lnr lnr-arrow-right"></span>
+            
+            </label>
+        
+    </div>
+
+    </div>
+
+    <!-- Community Window -->
+    <div class="community">
+
+    <!-- Header accent-->
+    <div class="header-accent">
+            <span class="header-content">
+                <label for="community-reveal">
+                <span class="lnr lnr-chevron-left"></span></label>
+                <span>Chatrooms</span>
+                <span class="lnr lnr-magnifier"></span>
+            </span>
+        </div>
+    
+        <!-- Category Tabs -->
+        <div class="tabs">
+            <span class="active">
+                <span class="lnr lnr-bubble"></span>
+                Chatrooms</span>
+            <span>
+                <span class="lnr lnr-home"></span>
+                Feed</span>
+            <span>
+                <span class="lnr lnr-user"></span>
+                My Profile</span>
+        </div>
+    
+        <!-- List Items -->
+        <div class="list-item">
+            <span>
+                <img src="custom/img.jpg">
+                <span class="online"></span>
+            </span>
+                
+            <span>
+                <div class="name">Public Chatroom</div>
+                <span class="last">last message here</span>
+            </span>
+            <span class="enter">
+                <span class="lnr lnr-enter"></span>
+            </span>
+    
+        </div>
+        <div class="list-item">
+                <span>
+                    <img src="custom/img.jpg">
+                    <span class="online"></span>
+                </span>
+                    
+                <span>
+                    <div class="name">General Talk</div>
+                    <span class="last">previous message</span>
+                </span>
+                <span class="enter">
+                    <span class="lnr lnr-enter"></span>
+                </span>
+        
+            </div>
+            <div class="list-item">
+                    <span>
+                        <img src="custom/img.jpg">
+                        <span class="online"></span>
+                    </span>
+                        
+                    <span>
+                        <div class="name">Misery and Hatred</div>
+                        <span class="last">old chat</span>
+                    </span>
+                    <span class="enter">
+                        <span class="lnr lnr-enter"></span>
+                    </span>
+            
+                </div>
+    </div>
+
+    <!-- Ride Panel -->
+    <div class="ride-panel">
+        <span class="title">LRT-1 Ride</span>
+        <span class="message-large">Hello John,</span>
+        <span class="sub-message">Thank you for choosing to ride with us.</span>
+        <span class="sub-message">While waiting, here are some things to do.</span>
+        <span class="infodetail">
+            <span class="item">
+                
+                <span class="lnr lnr-clock"></span>
+                <span class="head">Current Station</span>
+                <span class="value" id="current_station">Placeholder</span>
+            </span>
+            <span class="item">
+                    
+                <span class="lnr lnr-clock"></span>
+                <span class="head">Next Station</span>
+                <span class="value" id="next_station">Placeholder</span>
+            </span>
+        </span>
+        <span class="track">
+            <progress id="totalStations" max="20" value=""></progress>
+            <span class="start"></span>
+            <span class="tip"></span>
+            <span class="end lnr lnr-map-marker"></span>
+        </span>
+        
+        
+        
+    </div>
+
+    <script>
+        // if ('serviceWorker' in navigator) {
+        // navigator.serviceWorker
+        //     .register('./serviceworker.js')
+        //     .then(function() { console.log('Service Worker Registered'); });
+        // }
+
+
+        // Assistant dim
+        function searchFocus(){
+            document.querySelector(".search-dim").classList.add("show")
+        }
+
+        function searchBlur(){
+            document.querySelector(".search-dim").classList.remove("show")
+        }
+
+        function showRidePane(){
+            document.querySelector("#ride-reveal").setAttribute("checked","true")
+        }
+
+        class Stations {
+	init(){
+		var stationList = [
+			{"id":1,"station_name":"Roosevelt",line:1,latitude:14.6576072,longitude:121.0187903},
+			{"id":2,"station_name":"Munoz",line:1,latitude:14.6575508,longitude:121.0190023},
+			{"id":3,"station_name":"Monumento",line:1,latitude:14.6543722,longitude:120.9817053},
+			{"id":4,"station_name":"5th Avenue",line:1,latitude:14.6444202,longitude:120.9813945},
+			{"id":5,"station_name":"R. Papa",line:1,latitude:14.636055,longitude:120.9801084},
+			{"id":6,"station_name":"Abad Santos",line:1,latitude:14.63088263,longitude:120.9790571},
+			{"id":7,"station_name":"Blumentritt",line:1,latitude:14.6226405,longitude:120.9807027},
+			{"id":8,"station_name":"Tayuman",line:1,latitude:14.6167419,longitude:120.980544},
+			{"id":9,"station_name":"Bambang",line:1,latitude:14.6082169,longitude:120.9778718},
+			{"id":10,"station_name":"Doroteo Jose",line:1,latitude:14.6054454,longitude:120.9798723},
+			{"id":11,"station_name":"Carriedo",line:1,latitude:14.5997464,longitude:120.9792228},
+			{"id":12,"station_name":"Central Terminal",line:1,latitude:14.5927811,longitude:120.9794726},
+			{"id":13,"station_name":"United Nations",line:1,latitude:14.5825552,longitude:120.9824323},
+			{"id":14,"station_name":"Pedro Gil",line:1,latitude:14.5770233,longitude:120.9872367},
+			{"id":15,"station_name":"Quirino",line:1,latitude:14.5702241,longitude:120.9894316},
+			{"id":16,"station_name":"Vito Cruz",line:1,latitude:14.5633042,longitude:120.9926264},
+			{"id":17,"station_name":"Gil Puyat",line:1,latitude:14.5541678,longitude:120.9949784},
+			{"id":18,"station_name":"Libertad",line:1,latitude:14.5476681,longitude:120.9964217},
+			{"id":19,"station_name":"EDSA",line:1,latitude:14.538408,longitude:121.0003645},
+			{"id":20,"station_name":"Baclaran",line:1,latitude:14.5342911,longitude:120.9961528}			
+		];
+
+		localStorage.setItem("lrta_stations",JSON.stringify(stationList));
+
+		return stationList;
+	}
+
+	list(){
+		return JSON.parse(localStorage.getItem("lrta_stations"));
+	}
+
+	find(cat,q){
+		var st = this.list();
+		var res = st.find((obj)=>{return obj[cat]==q});
+		return res;
+	}
+
+	filter(cat,q){
+		var st = this.list();
+		var res = st.filter((obj)=>{return obj[cat] == q});
+	}
+
+	filterExcept(cat,q){
+		var st = this.list();
+		var res = st.filter((obj)=>{return obj[cat] !== q});
+		return res;
+	}
+
+	nearest(lat,lng){
+		// Convert Degress to Radians
+		function Deg2Rad(deg) {
+		  return deg * Math.PI / 180;
+		}
+
+		function PythagorasEquirectangular(lat1, lon1, lat2, lon2) {
+		  lat1 = Deg2Rad(lat1);
+		  lat2 = Deg2Rad(lat2);
+		  lon1 = Deg2Rad(lon1);
+		  lon2 = Deg2Rad(lon2);
+		  var R = 6371; // Earth's radius in km
+		  var x = (lon2 - lon1) * Math.cos((lat1 + lat2) / 2);
+		  var y = (lat2 - lat1);
+		  var d = Math.sqrt(x * x + y * y) * R;
+		  return d;
+		}
+
+		var lrtList = this.list();
+		var mindif = 99999;
+		var closest;
+
+		for (var index = 0; index < lrtList.length; ++index) {
+			var dif = PythagorasEquirectangular(lat, lng, lrtList[index].latitude, lrtList[index].longitude);
+			if (dif < mindif) {
+			  closest = index;
+			  mindif = dif;
+			}
+		}	
+		return lrtList[closest]
+	}
+
+    boundTo(from,to){
+        if(from < to){ 
+            return "south";
+        } else {
+            return "north";
+        }
+    }
+
+    totalStations(from,to){
+        var res = Math.abs(to - from)
+        return res;
+    }
+
+
+}
+
+
+let station = new Stations();
+
+var startApp = ()=>{
+    if('geolocation' in navigator){
+        var showPosition = (pos)=>{
+            var lat = pos.coords.latitude;
+			var lon = pos.coords.longitude;
+			var nearest = station.nearest(lat,lon);
+
+            var stations = station.list();
+            $("#fromSelect").html("");
+            $("#toSelect").html("");
+            $.each(stations,(index,st)=>{
+                var tpl = `<option value="${st.id}">${st.station_name}</option>`
+                $("#fromSelect").append(tpl);
+                $("#toSelect").append(tpl);
+            });
+
+            $("#fromSelect").val(nearest.id);
+            filterTo();
+                        
+        };
+        var errorPosition = ()=>{
+			M.toast({html:"Cannot get current position", durationLength:3000});
+		}
+		var options = {
+			enableHighAccuracy:true,
+		    maximumAge:0
+		};
+        navigator.geolocation.getCurrentPosition(showPosition,errorPosition,options);
+    }
+}
+
+var filterTo = ()=>{
+    var from = $("#fromSelect").val();
+    var stations = station.filterExcept('id',from);
+    $("#toSelect").html("");
+    $.each(stations,(index,st)=>{
+        if(st.id != from){
+            var tpl = `<option value="${st.id}">${st.station_name}</option>`
+            $("#toSelect").append(tpl);
+        }
+    });
+};
+
+var ride = ()=>{
+    var from = $("#fromSelect").val();
+    var to = $("#toSelect").val();
+
+    var ts = station.totalStations(from,to);
+    $("#totalStations").attr("max",ts);
+
+    var bt = station.boundTo(from,to);
+    localStorage.setItem("trip_boundto",bt);
+
+    if(station.boundTo(from,to) == "north") {
+        var stations = station.list();
+        stations = stations.reverse();
+        localStorage.setItem("lrta_stations",JSON.stringify(stations));
+    }
+
+    if('geolocation' in navigator){
+        var showPosition = (pos)=>{
+            var lat = pos.coords.latitude;
+			var lon = pos.coords.longitude;
+			var nearest = station.nearest(lat,lon);
+			var stationList = station.filterExcept('id',nearest.id);
+			console.log(nearest);
+			console.log(stationList);
+            if(nearest.id == to){
+                navigator.geolocation.clearWatch(id);
+				alert("You are now at your destination");
+            }
+            $("#current_station").html(nearest.station_name);
+            if(localStorage.getItem("trip_boundto")== "south"){
+                var neid = nearest.id;
+                var nid = +neid + 1; 
+            } else {
+                var neid = nearest.id;
+                var nid = +neid - 1;
+            }
+            var nxt = station.find('id',nid);
+            $("#next_station").html(nxt.station_name);
+
+            var ts = $("#totalStations").val();
+            ts = +ts + 1;
+            $("#totalStations").val(ts);
+        };
+
+        var errorPosition = (err)=>{
+            console.log(err);
+        };
+
+        var options = {
+            enableHighAccuracy:true,
+		    maximumAge:0
+        };
+
+        navigator.geolocation.watchPosition(showPosition,errorPosition,options);
+    }
+
+    showRidePane();
+};
+
+$(document).ready(()=>{
+    station.init();
+    startApp();
+});
+
+$("#fromSelect").change(()=>{
+    filterTo();
+});
+
+    </script>
+
+
+</body>
+
+</html>
