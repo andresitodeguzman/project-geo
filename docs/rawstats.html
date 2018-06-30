@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Geolocation tests</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+<style>
+    body {
+        font-family: Sans-serif;
+    }
+</style>
+<body>
+    <h2>RilesState<br>Geolocation API Test</h2>
+    <br>
+    <p>
+        <b>Raw Stats</b><br>
+        <br>
+        Current Latitude: <span id="latitude">0</span><br>
+        Current Longitude: <span id="longitude">0</span><br>
+        Accuracy: <span id="accuracy"></span><br>
+        Speed: <span id="speed">0</span> m/s<br>
+        Heading (0 N, 90 E, 270 W, 180 S): <span id="heading"></span> degrees<br>
+        Altitude: <span id="altitude"></span> m from sea level<br>
+        Altitude Accuracy: <span id="altitude_accuracy"></span><br>
+        <br>
+        <br>
+        <b>Derived Stats</b><br>
+        <br>
+        Distance to Destination: <span id="distance">0</span> m<br>
+        Time Remaining in minutes ([t=d/s]/60s): <span id="remaining_min">0</span> minutes
+        <br>
+        <br>
+        <input type="text" id="dest_latitude_input" placeholder="Latitude"><br>
+        <input type="text" id="dest_longitude_input" placeholder="Longitude"><br>
+        <button id="setDest" onclick="setDestination()">Set</button>
+        <button id="clearDest">Clear</button><br>
+        <button id="presetDest">Preset</button><br>
+        <br>
+        <b>Set Destination</b><br>
+        Latitude: <span id="dest_latitude">14.6756147</span><br>
+        Longitude: <span id="dest_longitude">120.9416758</span><br>
+    </p>
+</body>
+</html>
+<script>
+    function getDistance(lat1, lon1, lat2, lon2) 
+    {
+      var R = 6371; // km
+      var dLat = toRad(lat2-lat1);
+      var dLon = toRad(lon2-lon1);
+      var lat1 = toRad(lat1);
+      var lat2 = toRad(lat2);
+
+      var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+        Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2); 
+      var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+      var d = R * c;
+      return d;
+    }
+
+    // Converts numeric degrees to radians
+    function toRad(Value) 
+    {
+        return Value * Math.PI / 180;
+    }
+
+    var setDestination = ()=>{
+        var lt = $("#dest_latitude_input").val();
+        var lng = $("#dest_longitude_input").val();
+        $("#dest_latitude").html(lt);
+        $("#dest_longitude").html(lng);
+    }
+
+    var getDestination = ()=>{
+        var lt = $("#dest_latitude").html();
+        var lng = $("#dest_longitude").html();
+        var obj = {
+            "latitude":+lt,
+            "longitude":+lng
+        };
+
+        return obj;
+    }
+
+    var init = ()=>{
+        if('geolocation' in navigator){
+            var successPosition = (pos)=>{
+                var lt = pos.coords.latitude;
+                var lng = pos.coords.longitude;
+                var sp = pos.coords.speed;
+                var he = pos.coords.heading;
+                var acc = pos.coords.accuracy;
+                var alt = pos.coords.altitude;
+                var alt_acc = pos.coords.altitudeAccuracy;
+
+                console.log(pos.coords);
+
+                if(!sp) sp = "N/A";
+                if(!he) he = "N/A";
+                if(!alt) alt = "N/A";
+                if(!alt_acc) alt_acc = "N/A";
+                $("#latitude").html(lt);
+                $("#longitude").html(lng);
+                $("#speed").html(sp);
+                $("#heading").html(he);
+                $("#accuracy").html(acc);
+                $("#altitude").html(alt);
+                $("#altitude_accuracy").html(alt_acc);
+
+                var to = {
+                    "latitude":lt,
+                    "longtude":lng
+                };
+                var dest = getDestination();
+                var dist = getDistance(dest.latitude,dest.longitude,lt,lng);
+                $("#distance").html(dist);
+            };
+
+            var errorPosition = (err)=>{
+                alert(err);
+            };
+
+            id = navigator.geolocation.watchPosition(successPosition, errorPosition);
+        }
+    }
+    $(document).ready(()=>{
+        init();
+    });
+
+</script>
