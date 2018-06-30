@@ -123,7 +123,12 @@
                 alert(err);
             };
 
-            id = navigator.geolocation.watchPosition(successPosition, errorPosition);
+            var options = {
+			enableHighAccuracy:true,
+		    maximumAge:0
+    		};
+
+            id = navigator.geolocation.watchPosition(successPosition, errorPosition,options);
         }
     }
     $(document).ready(()=>{
