@@ -89,7 +89,7 @@
     var getApproximateTime = (distance,speed)=>{
         var time = +distance / +speed;
         time = +time/60;
-        if(isNan(time)) time = 0;
+        if(isNaN(time)) time = 0;
         return time;
     }
 
