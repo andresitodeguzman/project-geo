@@ -88,6 +88,7 @@
 
     var getApproximateTime = (distance,speed)=>{
         var time = +distance / +speed;
+        time = +time/60;
         if(isNan(time)) time = 0;
         return time;
     }
@@ -141,7 +142,9 @@
                 };
                 var dest = getDestination();
                 var dist = getDistance(dest.latitude,dest.longitude,lt,lng);
+                var appt = getApproximateTime(dist,sp);
                 $("#distance").html(dist);
+                $("#remaining_min").html(appt);
             };
 
             var errorPosition = (err)=>{
